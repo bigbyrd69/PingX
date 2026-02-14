@@ -1,10 +1,16 @@
 package com.ping.app.data.repository
 
+import android.content.Context
+import com.ping.app.data.mesh.BluetoothMeshTransport
 import com.ping.app.data.mesh.BluetoothTransportStub
 import com.ping.app.data.mesh.InMemoryPacketStore
 import com.ping.app.data.mesh.MeshRouter
 import com.ping.app.data.mesh.MeshService
 import com.ping.app.data.mesh.NearbyConnectionsTransportStub
+import com.ping.app.data.mesh.WifiDirectMeshTransport
+import com.ping.app.domain.model.DeliveryStatus
+import com.ping.app.domain.model.MeshPacket
+import com.ping.app.domain.model.Peer
 import com.ping.app.data.mesh.WifiDirectTransportStub
 import com.ping.app.domain.model.DeliveryStatus
 import com.ping.app.domain.model.MeshPacket
@@ -20,12 +26,17 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
+class MeshRepositoryImpl(
+    context: Context
+) : MeshRepository {
 class MeshRepositoryImpl : MeshRepository {
 
     private val scope = CoroutineScope(SupervisorJob() + Dispatchers.Default)
 
     private val service = MeshService(
         transports = listOf(
+            WifiDirectMeshTransport(context),
+            BluetoothMeshTransport(context),
             WifiDirectTransportStub(),
             BluetoothTransportStub(),
             NearbyConnectionsTransportStub()
@@ -56,6 +67,7 @@ class MeshRepositoryImpl : MeshRepository {
     }
 
     override suspend fun refreshPeers() {
+        service.refreshPeers()
         // Mocked discovery results to simulate multi-hop proximity.
         peerState.value = listOf(
             Peer("peer-alpha", "Alpha", TransportType.WIFI_DIRECT, 1, System.currentTimeMillis()),

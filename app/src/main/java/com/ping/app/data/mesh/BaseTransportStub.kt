@@ -27,6 +27,15 @@ open class BaseTransportStub(
         delay(20)
     }
 
+    override suspend fun refreshDiscovery() {
+        delay(20)
+    }
+
+    override suspend fun connect(peer: Peer): Boolean {
+        delay(10)
+        return true
+    }
+
     override suspend fun send(packet: MeshPacket, peer: Peer?) {
         // Stub echo to simulate eventual relay acknowledgement.
         delay(80)

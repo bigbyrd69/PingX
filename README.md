@@ -46,6 +46,7 @@ Ping is an offline-first emergency communication prototype for disaster scenario
 1. Open in Android Studio (Jellyfish+ recommended).
 2. Sync Gradle.
 3. Run on emulator/device (API 26+).
+4. Grant nearby, location, and bluetooth permissions at runtime.
 
 ## Permissions (placeholders included)
 - Fine/coarse location
@@ -63,6 +64,11 @@ Ping is an offline-first emergency communication prototype for disaster scenario
 - Router logic for deduplication + TTL decrement.
 - Repository/ViewModel wiring and interactive screens.
 - Adaptive icon setup and custom branding resources.
+- Wi-Fi Direct and Bluetooth peer discovery integration points.
+
+### Stubbed (mocked but production-ready interfaces)
+- Actual packet socket/session data channels for Wi-Fi Direct and Bluetooth payload transfer.
+- Nearby Connections transport integration.
 
 ### Stubbed (mocked but production-ready interfaces)
 - Actual radio transport integration for Wi-Fi Direct, Bluetooth, and Nearby.

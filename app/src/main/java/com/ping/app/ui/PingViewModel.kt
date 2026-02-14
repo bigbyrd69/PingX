@@ -47,6 +47,7 @@ class PingViewModel(
 
         val packet = MeshPacket(
             senderId = localNodeId,
+            targetId = if (isBroadcast) null else peers.value.firstOrNull()?.id,
             targetId = if (isBroadcast) null else "peer-alpha",
             packetType = PacketType.TEXT,
             payload = PacketPayload.Text(text),

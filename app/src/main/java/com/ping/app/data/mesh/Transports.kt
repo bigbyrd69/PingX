@@ -11,6 +11,11 @@ interface MeshTransport {
 
     suspend fun start()
     suspend fun stop()
+    suspend fun refreshDiscovery()
+    suspend fun connect(peer: Peer): Boolean
+    suspend fun send(packet: MeshPacket, peer: Peer?)
+}
+
     suspend fun send(packet: MeshPacket, peer: Peer?)
 }
 

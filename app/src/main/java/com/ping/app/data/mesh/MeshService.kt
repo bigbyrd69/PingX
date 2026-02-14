@@ -14,6 +14,7 @@ class MeshService(
     private val router: MeshRouter,
     scope: CoroutineScope
 ) {
+
     val peers: Flow<List<Peer>> = combine(transports.map { it.discoveredPeers }) { discovered ->
         discovered.flatMap { it }
             .distinctBy { it.id }
@@ -36,10 +37,17 @@ class MeshService(
         transports.forEach { it.start() }
     }
 
+    suspend fun refreshPeers() {
+        transports.forEach { it.refreshDiscovery() }
+    }
+
     suspend fun broadcast(packet: MeshPacket, peers: List<Peer>) {
         val nextHops = router.nextHops(peers, packet.senderId)
         transports.forEach { transport ->
             nextHops.forEach { peer ->
+                if (transport.connect(peer)) {
+                    transport.send(packet, peer)
+                }
                 transport.send(packet, peer)
             }
         }
