@@ -1,0 +1,71 @@
+# Ping (Android Mesh Emergency App)
+
+Ping is an offline-first emergency communication prototype for disaster scenarios. It demonstrates clean architecture boundaries and mesh networking behavior with production-ready interfaces and mocked transport implementations.
+
+## Stack
+- Kotlin
+- Jetpack Compose
+- Material 3
+- Clean architecture (domain/data/ui)
+
+## Architecture
+
+### Domain layer
+- `MeshPacket`, `Peer`, packet/transport/status enums
+- Payload types (`Text`, `Location`, `SOS`)
+- Repository abstraction (`MeshRepository`)
+
+### Data layer
+- Transport abstraction (`MeshTransport`) with stubs:
+  - Wi-Fi Direct
+  - Bluetooth
+  - Nearby Connections (optional)
+- `MeshRouter` for TTL decrement, deduplication, and next-hop resolution
+- `PacketStore` for message ID deduplication
+- `MeshService` for store-and-forward orchestration across transports
+- `MeshRepositoryImpl` connecting service flows to UI state
+
+### UI layer
+- `PingApp.kt` tab host only (SOS / Messages / Peers)
+- `SosScreen.kt`
+- `MessageScreen.kt`
+- `PeerScreen.kt`
+- Componentized list/graph cards
+
+## Features
+- SOS high-priority broadcast packet
+- Location packet sharing (lat/lng payload)
+- Text messaging with broadcast/direct mode toggle
+- Peer discovery list with transport + hop distance
+- Delivery status in feed (`CREATED`, `DISCOVERED`, `RELAYED`, etc.)
+- Packet visualization panel for TTL/hop progression
+- Black + neon green hacker-style Material 3 theme
+- Adaptive launcher icon with mesh node visual
+
+## Run
+1. Open in Android Studio (Jellyfish+ recommended).
+2. Sync Gradle.
+3. Run on emulator/device (API 26+).
+
+## Permissions (placeholders included)
+- Fine/coarse location
+- Bluetooth + Bluetooth admin/scan/connect
+- Nearby Wi-Fi devices
+- Wi-Fi state/change
+- Internet (optional for future relays/telemetry)
+
+## What is implemented vs. stubbed
+
+### Implemented
+- Full project scaffold with Compose + Material 3.
+- Domain/data/ui separation.
+- Packet model supporting TTL, hop count, status, dedupe ID.
+- Router logic for deduplication + TTL decrement.
+- Repository/ViewModel wiring and interactive screens.
+- Adaptive icon setup and custom branding resources.
+
+### Stubbed (mocked but production-ready interfaces)
+- Actual radio transport integration for Wi-Fi Direct, Bluetooth, and Nearby.
+- Real peer auto-discovery from hardware/network stack.
+- Real multi-hop route metric optimization and ACK protocol.
+- Reliable persistence layer (currently in-memory packet store).
