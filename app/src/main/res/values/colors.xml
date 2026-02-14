@@ -1,0 +1,5 @@
+<resources>
+    <color name="ping_black">#050805</color>
+    <color name="ping_green">#39FF14</color>
+    <color name="ping_green_dark">#1FA20A</color>
+</resources>
