@@ -1,6 +1,7 @@
 # Ping (Android Mesh Emergency App)
 
 Ping is an offline-first emergency communication prototype for disaster scenarios. It demonstrates clean architecture boundaries and mesh networking behavior with production-ready interfaces and partially integrated transport discovery.
+Ping is an offline-first emergency communication prototype for disaster scenarios. It demonstrates clean architecture boundaries and mesh networking behavior with production-ready interfaces and mocked transport implementations.
 
 ## Stack
 - Kotlin
@@ -16,10 +17,10 @@ Ping is an offline-first emergency communication prototype for disaster scenario
 - Repository abstraction (`MeshRepository`)
 
 ### Data layer
-- Transport abstraction (`MeshTransport`) with implementations:
-  - Wi-Fi Direct discovery transport
-  - Bluetooth bonded-peer discovery transport
-  - Nearby Connections (optional stub)
+- Transport abstraction (`MeshTransport`) with stubs:
+  - Wi-Fi Direct
+  - Bluetooth
+  - Nearby Connections (optional)
 - `MeshRouter` for TTL decrement, deduplication, and next-hop resolution
 - `PacketStore` for message ID deduplication
 - `MeshService` for store-and-forward orchestration across transports
@@ -46,7 +47,7 @@ Ping is an offline-first emergency communication prototype for disaster scenario
 1. Open in Android Studio (Jellyfish+ recommended).
 2. Sync Gradle.
 3. Run on emulator/device (API 26+).
-4. Grant nearby, location, and bluetooth permissions at runtime (the app requests these on launch).
+4. Grant nearby, location, and bluetooth permissions at runtime.
 
 ## Permissions (placeholders included)
 - Fine/coarse location
@@ -64,10 +65,14 @@ Ping is an offline-first emergency communication prototype for disaster scenario
 - Router logic for deduplication + TTL decrement.
 - Repository/ViewModel wiring and interactive screens.
 - Adaptive icon setup and custom branding resources.
-- Wi-Fi Direct and Bluetooth peer discovery integration points with runtime-permission safety guards to prevent crashes when permissions are denied.
+- Wi-Fi Direct and Bluetooth peer discovery integration points.
 
 ### Stubbed (mocked but production-ready interfaces)
 - Actual packet socket/session data channels for Wi-Fi Direct and Bluetooth payload transfer.
 - Nearby Connections transport integration.
+
+### Stubbed (mocked but production-ready interfaces)
+- Actual radio transport integration for Wi-Fi Direct, Bluetooth, and Nearby.
+- Real peer auto-discovery from hardware/network stack.
 - Real multi-hop route metric optimization and ACK protocol.
 - Reliable persistence layer (currently in-memory packet store).
