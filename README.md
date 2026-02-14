@@ -1,5 +1,6 @@
 # Ping (Android Mesh Emergency App)
 
+Ping is an offline-first emergency communication prototype for disaster scenarios. It demonstrates clean architecture boundaries and mesh networking behavior with production-ready interfaces and partially integrated transport discovery.
 Ping is an offline-first emergency communication prototype for disaster scenarios. It demonstrates clean architecture boundaries and mesh networking behavior with production-ready interfaces and mocked transport implementations.
 
 ## Stack
