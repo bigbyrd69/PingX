@@ -20,7 +20,7 @@ open class BaseTransportStub(
     override val discoveredPeers: Flow<List<Peer>> = peerStream.asStateFlow()
 
     override suspend fun start() {
-        delay(20)
+        delay(40)
     }
 
     override suspend fun stop() {

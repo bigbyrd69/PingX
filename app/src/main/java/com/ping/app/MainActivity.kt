@@ -6,7 +6,6 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
-import androidx.compose.ui.platform.LocalContext
 import com.ping.app.data.repository.MeshRepositoryImpl
 import com.ping.app.ui.PingApp
 import com.ping.app.ui.PingViewModel
@@ -24,8 +23,7 @@ class MainActivity : ComponentActivity() {
 
 @Composable
 private fun PingRoot() {
-    val appContext = LocalContext.current.applicationContext
-    val viewModel = remember { PingViewModel(MeshRepositoryImpl(appContext)) }
+    val viewModel = remember { PingViewModel(MeshRepositoryImpl()) }
     PingTheme {
         PingApp(viewModel = viewModel)
     }
