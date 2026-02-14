@@ -48,6 +48,7 @@ class MeshService(
                 if (transport.connect(peer)) {
                     transport.send(packet, peer)
                 }
+                transport.send(packet, peer)
             }
         }
     }

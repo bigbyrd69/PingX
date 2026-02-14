@@ -16,4 +16,11 @@ interface MeshTransport {
     suspend fun send(packet: MeshPacket, peer: Peer?)
 }
 
+    suspend fun send(packet: MeshPacket, peer: Peer?)
+}
+
+class WifiDirectTransportStub : BaseTransportStub("wifi-direct")
+
+class BluetoothTransportStub : BaseTransportStub("bluetooth")
+
 class NearbyConnectionsTransportStub : BaseTransportStub("nearby-connections")

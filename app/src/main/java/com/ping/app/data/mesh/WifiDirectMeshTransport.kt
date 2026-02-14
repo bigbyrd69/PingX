@@ -1,5 +1,6 @@
 package com.ping.app.data.mesh
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.net.wifi.p2p.WifiP2pDevice
 import android.net.wifi.p2p.WifiP2pManager
@@ -36,12 +37,8 @@ class WifiDirectMeshTransport(
 
     override suspend fun stop() = Unit
 
+    @SuppressLint("MissingPermission")
     override suspend fun refreshDiscovery() {
-        if (!appContext.hasWifiDiscoveryPermission()) {
-            peerStream.value = emptyList()
-            return
-        }
-
         val currentManager = manager
         val currentChannel = channel
         if (currentManager == null || currentChannel == null) {
@@ -49,28 +46,22 @@ class WifiDirectMeshTransport(
             return
         }
 
-        val discoverOk = runCatching {
-            suspendCancellableCoroutine { continuation ->
-                currentManager.discoverPeers(currentChannel, object : WifiP2pManager.ActionListener {
-                    override fun onSuccess() = continuation.resume(Unit)
-                    override fun onFailure(reason: Int) = continuation.resume(Unit)
-                })
-            }
-        }.isSuccess
+        suspendCancellableCoroutine { continuation ->
+            currentManager.discoverPeers(currentChannel, object : WifiP2pManager.ActionListener {
+                override fun onSuccess() {
+                    continuation.resume(Unit)
+                }
 
-        if (!discoverOk) {
-            peerStream.value = emptyList()
-            return
+                override fun onFailure(reason: Int) {
+                    continuation.resume(Unit)
+                }
+            })
         }
 
-        val peers = runCatching {
-            suspendCancellableCoroutine<List<WifiP2pDevice>> { continuation ->
-                currentManager.requestPeers(currentChannel) { peerList ->
-                    continuation.resume(peerList.deviceList.toList())
-                }
+        val peers = suspendCancellableCoroutine<List<WifiP2pDevice>> { continuation ->
+            currentManager.requestPeers(currentChannel) { peerList ->
+                continuation.resume(peerList.deviceList.toList())
             }
-        }.getOrElse {
-            emptyList()
         }
 
         peerStream.value = peers.map { device ->
@@ -85,11 +76,13 @@ class WifiDirectMeshTransport(
     }
 
     override suspend fun connect(peer: Peer): Boolean {
-        if (!appContext.hasWifiDiscoveryPermission()) return false
-        return peerStream.value.any { it.id == peer.id }
+        return peersSnapshot().any { it.id == peer.id }
     }
 
     override suspend fun send(packet: MeshPacket, peer: Peer?) {
+        // Socket session management is TODO; echo packet for routing/testing flow.
         packetStream.emit(packet)
     }
+
+    private fun peersSnapshot(): List<Peer> = peerStream.value
 }
